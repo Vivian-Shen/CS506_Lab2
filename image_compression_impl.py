@@ -49,7 +49,7 @@ def save_result(original_image_np, quantized_image_np, output_path):
 
 if __name__ ==  "__main__":
     # Load and process the image
-    image_path = 'favorite_image.png'  
+    image_path = 'favorite_image.jpg'  
     output_path = 'compressed_image.png'  
     image_np = load_image(image_path)
 
