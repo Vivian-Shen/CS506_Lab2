@@ -11,20 +11,23 @@ def load_image(image_path):
 
 # Function to perform KMeans clustering for image quantization
 def image_compression(image_np, n_colors):
-    height, width, depth = image_np.shape
-    image_reshaped = image_np.reshape((width * height, depth))
-
+    image_reshaped = image_np.reshape(-1, 3)
+    
     # Apply Kmeans clustering
     kmeans = KMeans(n_clusters=n_colors, random_state=0)
     kmeans.fit(image_reshaped)
-
+    
     # Replace each pixel's color with the nearest cluster center
     compressed_pixels = kmeans.cluster_centers_[kmeans.labels_]
-
-    # Reshape the compressed pixels back to the original image shape
-    compressed_image_np = compressed_pixels.reshape((width, height, depth)).astype(np.uint8)
     
-    return compressed_image_np
+    # Map each pixel to its new color
+    compressed_pixels_reshaped = np.clip(compressed_pixels.astype('uint8'), 0, 255) 
+    
+    
+    # Reshape the compressed image back to the original shape
+    compressed_image = compressed_pixels_reshaped.reshape(image_np.shape)
+    
+    return compressed_image
 
 
 
@@ -49,7 +52,7 @@ def save_result(original_image_np, quantized_image_np, output_path):
 
 if __name__ ==  "__main__":
     # Load and process the image
-    image_path = 'favorite_image.jpg'  
+    image_path = 'dog.png'  
     output_path = 'compressed_image.png'  
     image_np = load_image(image_path)
 
