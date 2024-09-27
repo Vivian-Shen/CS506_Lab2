@@ -4,11 +4,33 @@ from PIL import Image
 
 # Function to load and preprocess the image
 def load_image(image_path):
-    raise NotImplementedError('You need to implement this function')
+    image = Image.open(image_path)
+    image_np = np.array(image)
+
+    return image_np
 
 # Function to perform KMeans clustering for image quantization
 def image_compression(image_np, n_colors):
-    raise NotImplementedError('You need to implement this function')
+    height, width, depth = image_np.shape
+    image_reshaped = image_np.reshape((width * height, depth))
+
+    # Apply Kmeans clustering
+    kmeans = KMeans(n_clusters=n_colors, random_state=0)
+    kmeans.fit(image_reshaped)
+
+    # Replace each pixel's color with the nearest cluster center
+    compressed_pixels = kmeans.cluster_centers_[kmeans.labels_]
+    
+    # Ensure that the pixel values are in the valid range (0-255) and are integers
+    compressed_pixels = np.clip(compressed_pixels.astype(int), 0, 255)
+    
+    # Reshape the compressed pixel array back to the original image dimensions
+    compressed_image_np = compressed_pixels.reshape(width, height, depth)
+    
+    return compressed_image_np
+
+
+
 
 # Function to concatenate and save the original and quantized images side by side
 def save_result(original_image_np, quantized_image_np, output_path):
@@ -31,8 +53,8 @@ def save_result(original_image_np, quantized_image_np, output_path):
 
 def __main__():
     # Load and process the image
-    image_path = 'favorite_image.png'  
-    output_path = 'compressed_image.png'  
+    image_path = '~/CS506_Lab2/favorite_image.png'  
+    output_path = '~/CS506_Lab2/compressed_image.png'  
     image_np = load_image(image_path)
 
     # Perform image quantization using KMeans
