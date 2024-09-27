@@ -20,15 +20,11 @@ def image_compression(image_np, n_colors):
 
     # Replace each pixel's color with the nearest cluster center
     compressed_pixels = kmeans.cluster_centers_[kmeans.labels_]
-    
-    # Ensure that the pixel values are in the valid range (0-255) and are integers
-    compressed_pixels = np.clip(compressed_pixels.astype(int), 0, 255)
-    
-    # Reshape the compressed pixel array back to the original image dimensions
-    compressed_image_np = compressed_pixels.reshape(width, height, depth)
+
+    # Reshape the compressed pixels back to the original image shape
+    compressed_image_np = compressed_pixels.reshape((width, height, depth)).astype(np.uint8)
     
     return compressed_image_np
-
 
 
 
@@ -53,8 +49,8 @@ def save_result(original_image_np, quantized_image_np, output_path):
 
 def __main__():
     # Load and process the image
-    image_path = '~/CS506_Lab2/favorite_image.png'  
-    output_path = '~/CS506_Lab2/compressed_image.png'  
+    image_path = 'favorite_image.png'  
+    output_path = 'compressed_image.png'  
     image_np = load_image(image_path)
 
     # Perform image quantization using KMeans
