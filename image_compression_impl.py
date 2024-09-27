@@ -47,7 +47,7 @@ def save_result(original_image_np, quantized_image_np, output_path):
     # Save the combined image
     combined_image.save(output_path)
 
-if __name__ ==  "__main__()":
+if __name__ ==  "__main__":
     # Load and process the image
     image_path = 'favorite_image.png'  
     output_path = 'compressed_image.png'  
